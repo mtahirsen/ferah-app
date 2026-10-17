@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ferah — Mac'iniz ferahlasın</title>
+<meta name="description" content="Ferah; gereksiz dosyaları temizleyen, diskinizi baloncuk haritasıyla gösteren ve geliştiricilerin biriktirdiklerini bulan, yerel bir macOS disk bakım uygulaması.">
+<meta name="theme-color" content="#07090d">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ferah — Mac'iniz ferahlasın">
+<meta property="og:description" content="Gereksiz dosya temizliği, görsel disk haritası, geliştirici alanı ve menü çubuğu disk bekçisi. Yerel, hızlı, dürüst.">
+<meta property="og:image" content="https://mtahirsen.github.io/ferah-site/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js")</script>
+<style>
+:root{
+  --bg:#07090d; --bg2:#0b0e14; --ink:#f4f6f8; --mute:rgba(244,246,248,.64); --faint:rgba(244,246,248,.42);
+  --line:rgba(255,255,255,.09); --glass:rgba(255,255,255,.055); --glass2:rgba(255,255,255,.09);
+  --green:#4cb35a; --green-l:#a6ec8f; --violet:#7f5cff; --violet-l:#c9b8ff; --blue:#3e9bf2; --blue-l:#a9dcff;
+  --accent:#b43cc8; --accent-g:linear-gradient(135deg,#d05ad8,#9b2fc4);
+  --radius:22px; --maxw:1180px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,"Segoe UI",sans-serif;
+  --round:ui-rounded,"SF Pro Rounded",-apple-system,"Inter",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* ---------- Gezinme ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(7,9,13,.72);backdrop-filter:saturate(160%) blur(18px);-webkit-backdrop-filter:saturate(160%) blur(18px);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--round);font-weight:600;font-size:19px;letter-spacing:.06em}
+.brand svg{width:34px;height:22px}
+.nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-size:14.5px;color:var(--mute)}
+.nav ul a:hover{color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 18px;font-weight:600;font-size:14px;
+  border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);transition:transform .2s,background .2s}
+.pill:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+.pill.accent{background:var(--accent-g);border-color:transparent;box-shadow:0 8px 30px rgba(180,60,200,.38)}
+.dot{width:7px;height:7px;border-radius:50%;background:#7CFF9B;box-shadow:0 0 0 4px rgba(124,255,155,.18)}
+
+/* ---------- Kahraman ---------- */
+.hero{position:relative;padding:140px 0 80px;overflow:hidden;isolation:isolate}
+.glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.75;z-index:-1;animation:drift 18s ease-in-out infinite alternate}
+.g1{width:720px;height:720px;left:-180px;top:-160px;background:radial-gradient(circle,#2f8a3a 0%,transparent 65%)}
+.g2{width:620px;height:620px;right:-160px;top:40px;background:radial-gradient(circle,#5a7a1f 0%,transparent 65%);animation-delay:-6s}
+.g3{width:560px;height:560px;left:35%;top:380px;background:radial-gradient(circle,#1d6f68 0%,transparent 65%);animation-delay:-12s;opacity:.55}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.08)}}
+.hero-grid{text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;color:var(--mute);
+  padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04)}
+h1{font-weight:300;font-size:clamp(46px,8.4vw,98px);line-height:1.02;letter-spacing:-.035em;margin:26px 0 22px}
+h1 em{font-style:normal;font-weight:500;background:linear-gradient(100deg,#c8f7b4 0%,#7fe08e 35%,#5fd3c8 70%,#e8ff8a 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(17px,2vw,21px);color:var(--mute);max-width:720px;margin:0 auto}
+.cta{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+.cta .pill{padding:13px 24px;font-size:15px}
+.meta{margin-top:16px;font-size:13px;color:var(--faint)}
+
+/* Mac penceresi çerçevesi */
+.mac{position:relative;border-radius:14px;overflow:hidden;background:#111;
+  box-shadow:0 0 0 1px rgba(255,255,255,.10),0 40px 120px -20px rgba(0,0,0,.75),0 20px 60px -30px rgba(0,0,0,.6)}
+.mac img{width:100%;height:auto}
+.mac::before{content:"";position:absolute;left:14px;top:14px;width:12px;height:12px;border-radius:50%;background:#ff5f57;
+  box-shadow:20px 0 0 #febc2e,40px 0 0 #28c840;z-index:2}
+.stage{position:relative;max-width:1100px;margin:64px auto 0;perspective:1800px}
+.stage .mac.main{transform:rotateX(9deg) scale(.985);transform-origin:50% 0;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.stage.in .mac.main{transform:none}
+.float-card{position:absolute;right:-28px;bottom:-46px;width:min(300px,30%);border-radius:14px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 30px 80px -10px rgba(0,0,0,.8);animation:bob 7s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+
+/* ---------- Şerit ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;margin:120px auto 0}
+.stat{background:var(--bg2);padding:26px 24px}
+.stat b{display:block;font-size:30px;font-weight:600;letter-spacing:-.02em}
+.stat span{font-size:14px;color:var(--mute)}
+
+/* ---------- Bölümler ---------- */
+section.module{position:relative;padding:150px 0 40px;isolation:isolate}
+section.module .bgglow{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(800px 500px at var(--gx,20%) 40%,var(--c1),transparent 70%),radial-gradient(700px 500px at var(--gx2,85%) 70%,var(--c2),transparent 70%)}
+.m-green{--c1:rgba(47,138,58,.30);--c2:rgba(90,122,31,.22);--tone:var(--green-l)}
+.m-violet{--c1:rgba(95,50,220,.32);--c2:rgba(160,60,220,.20);--tone:var(--violet-l)}
+.m-blue{--c1:rgba(30,100,200,.32);--c2:rgba(40,160,200,.18);--tone:var(--blue-l)}
+.m-graphite{--c1:rgba(120,130,170,.20);--c2:rgba(180,60,200,.14);--tone:#d7dcff}
+.split{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:center}
+.split.rev{grid-template-columns:7fr 5fr}
+.split.rev .copy{order:2}
+.chip{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;color:var(--tone);
+  padding:6px 12px 6px 6px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.chip i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-style:normal}
+h2{font-size:clamp(34px,4.6vw,56px);font-weight:300;letter-spacing:-.03em;line-height:1.06;margin:22px 0 18px}
+h2 strong{font-weight:600}
+.copy p{color:var(--mute);font-size:18px;margin:0 0 22px}
+.checks{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.checks li{position:relative;padding-left:34px;font-size:15.5px;color:rgba(244,246,248,.86)}
+.checks li code{font:500 13.5px ui-monospace,SFMono-Regular,Menlo,monospace;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.08)}
+.checks li::before{content:"";position:absolute;left:0;top:2px;width:20px;height:20px;border-radius:50%;
+  background:var(--tone) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' fill='none' stroke='%2307090d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;opacity:.95}
+.shots{position:relative}
+.shots .mac.back{position:absolute;width:58%;right:-6%;bottom:-14%;z-index:2}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 0}
+.tags code{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;padding:6px 10px;border-radius:8px;background:rgba(62,155,242,.14);
+  color:var(--blue-l);border:1px solid rgba(62,155,242,.25)}
+
+/* Dürüst rakamlar kartı */
+.honest{margin-top:30px;padding:22px 22px 18px;border-radius:18px;background:var(--glass);border:1px solid var(--line)}
+.honest h4{margin:0 0 4px;font-size:15px;font-weight:600}
+.honest p{margin:0 0 16px;font-size:14px;color:var(--mute)}
+.bar{display:grid;grid-template-columns:96px 1fr 70px;align-items:center;gap:12px;font-size:13.5px;margin-top:10px}
+.bar span:first-child{color:var(--mute)}
+.track{height:10px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.track i{display:block;height:100%;border-radius:99px;width:0;transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.in .track i{width:var(--w)}
+.bar b{text-align:right;font-weight:600}
+
+/* Menü çubuğu sahnesi */
+.menubar-stage{position:relative;max-width:560px;margin-left:auto}
+.mbar{height:30px;border-radius:12px 12px 0 0;background:rgba(30,32,40,.85);border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:flex-end;gap:16px;padding:0 14px;font-size:13px;color:rgba(255,255,255,.75)}
+.mbar .me{display:flex;align-items:center;gap:6px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.16);color:#fff;font-weight:600}
+.mbar svg{width:14px;height:14px}
+.mpanel{width:340px;margin:8px 14px 0 auto;border-radius:14px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 30px 80px -10px rgba(0,0,0,.85)}
+.menubar-stage{padding-top:96px}
+.notif{position:absolute;right:0;top:0;width:330px;padding:14px 16px;border-radius:18px;display:grid;grid-template-columns:38px 1fr;gap:12px;
+  background:rgba(40,42,52,.86);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);font-size:13px;animation:bob 8s ease-in-out infinite}
+.notif img{width:38px;height:38px;border-radius:9px}
+.notif b{display:block;font-size:13.5px;margin-bottom:2px}
+.notif span{color:var(--mute)}
+
+/* ---------- Güvenlik ---------- */
+.safety{padding:150px 0 40px}
+.center{text-align:center;max-width:760px;margin:0 auto}
+.center p{color:var(--mute);font-size:18px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.card{padding:26px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));border:1px solid var(--line);
+  transition:transform .3s,border-color .3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.18)}
+.card .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;
+  background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid var(--line)}
+.card .ic svg{width:22px;height:22px}
+.card h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.card p{margin:0;font-size:15px;color:var(--mute)}
+
+/* ---------- Teknik + SSS ---------- */
+.tech{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
+.tech span{padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:14px;color:rgba(244,246,248,.85)}
+.faq{max-width:820px;margin:48px auto 0}
+details{border-bottom:1px solid var(--line);padding:6px 0}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px 0;font-size:18px;font-weight:500}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-weight:300;font-size:26px;color:var(--mute);transition:transform .3s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:0 0 18px;color:var(--mute);font-size:16px;max-width:720px}
+
+/* ---------- Son çağrı ---------- */
+.final{position:relative;padding:160px 0 120px;text-align:center;overflow:hidden;isolation:isolate}
+.final .glow{opacity:.55}
+.orb{position:relative;width:132px;height:132px;margin:0 auto 40px}
+.orb::before{content:"";position:absolute;inset:-34px;border-radius:50%;filter:blur(30px);
+  background:conic-gradient(from 0deg,#e8ff6b,#58e07a,#2bd3c6,#7f5cff,#d04bff,#e8ff6b);animation:spin 9s linear infinite;opacity:.8}
+.orb b{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:19px;
+  background:linear-gradient(180deg,#6cc261,#2f7a33);border:3px solid rgba(255,255,255,.85);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--faint);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+
+/* ---------- Görünme animasyonu ---------- */
+.js .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.track i{width:var(--w)}}
+
+/* ---------- Mobil ---------- */
+@media (max-width:960px){
+  .nav ul{display:none}
+  .split,.split.rev{grid-template-columns:1fr;gap:44px}
+  .split.rev .copy{order:0}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:1fr 1fr}
+  .float-card{right:-8px;bottom:-30px;width:38%}
+  .menubar-stage{padding-top:0}
+  .notif{position:relative;right:auto;top:auto;margin:0 0 16px;width:100%}
+  .menubar-stage{margin:0 auto}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  .hero{padding-top:110px}
+  .cards{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat b{font-size:24px}
+  .mpanel{width:100%;margin:8px 0 0}
+  .shots .mac.back{position:relative;width:100%;right:0;bottom:0;margin-top:14px}
+  .float-card{display:none}
+  .bar{grid-template-columns:80px 1fr 60px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 34 22">
+      <path d="M3 13.5a12 6 0 0 0 24 0" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.4"/>
+      <ellipse cx="15" cy="10.5" rx="12" ry="6" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.4"/>
+      <ellipse cx="15" cy="10.5" rx="4.4" ry="2.4" fill="currentColor"/>
+      <path d="M28 1.5c.4 2.4 1.1 3.1 3.5 3.5-2.4.4-3.1 1.1-3.5 3.5-.4-2.4-1.1-3.1-3.5-3.5 2.4-.4 3.1-1.1 3.5-3.5z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Ferah"><svg><use href="#logo"/></svg>ferah</a>
+    <ul>
+      <li><a href="#temizlik">Temizlik</a></li>
+      <li><a href="#alan-mercegi">Alan Merceği</a></li>
+      <li><a href="#gelistirici">Geliştirici Alanı</a></li>
+      <li><a href="#bekci">Disk Bekçisi</a></li>
+      <li><a href="#guvenlik">Güvenlik</a></li>
+    </ul>
+    <span class="pill"><span class="dot"></span>Yakında</span>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+  <div class="wrap hero-grid">
+    <span class="eyebrow reveal"><span class="dot"></span>macOS için yerel disk bakım uygulaması</span>
+    <h1 class="reveal">Mac'iniz<br><em>ferahlasın.</em></h1>
+    <p class="lead reveal">Gereksiz dosyaları bulur, diskinizi baloncuk haritasıyla gösterir, geliştiricilerin biriktirdiklerini ortaya çıkarır. Silmeden önce her şeyi size gösterir — ve rakamları şişirmez.</p>
+    <div class="cta reveal">
+      <span class="pill accent">macOS 15+ · Yakında</span>
+      <a class="pill" href="#temizlik">Neler yapıyor? ↓</a>
+    </div>
+    <p class="meta reveal">Apple Silicon için yerel SwiftUI · İnternet bağlantısı yok · Veri toplamaz</p>
+
+    <div class="stage reveal" id="stage">
+      <div class="mac main"><img src="assets/cleanup-intro.webp" width="2400" height="1480" alt="Ferah Çöp Temizliği giriş ekranı: yeşil cam disk, kategoriler ve Tara düğmesi"></div>
+      <div class="float-card"><img src="assets/menubar.webp" width="680" height="1066" alt="Menü çubuğu disk bekçisi paneli"></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats reveal">
+    <div class="stat"><b>13</b><span>temizlik kategorisi</span></div>
+    <div class="stat"><b>62 sn</b><span>5,7 milyon dosyalık tüm disk taraması*</span></div>
+    <div class="stat"><b>%100</b><span>yerel — hiçbir şey dışarı gitmez</span></div>
+    <div class="stat"><b>0</b><span>izinli alanın dışına dokunulan dosya</span></div>
+  </div>
+</div>
+
+<!-- Temizlik -->
+<section class="module m-green" id="temizlik">
+  <div class="bgglow" style="--gx:15%;--gx2:90%"></div>
+  <div class="wrap split">
+    <div class="copy reveal">
+      <span class="chip"><i style="background:linear-gradient(135deg,#86de74,#2c8a3c)">✦</i>Temizlik</span>
+      <h2>Gereksizi bulur,<br><strong>gereklisine dokunmaz.</strong></h2>
+      <p>Uygulama önbellekleri, günlükler, Xcode ara verileri, çöp kutuları ve Mail ekleri tek taramada. Her öğe hangi uygulamaya ait olduğu ve neden güvenli olduğuyla birlikte listelenir.</p>
+      <ul class="checks">
+        <li>Çalışan uygulamaların önbelleklerini otomatik olarak seçmez, "Açık" diye işaretler.</li>
+        <li>iCloud, Anahtar Zinciri ve süren indirmeler gibi hassas önbellekler hiç listelenmez.</li>
+        <li>Klasörün kendisi yerinde kalır, yalnızca içi boşaltılır — uygulamalar sorunsuz devam eder.</li>
+        <li>Yönetici izni gereken öğeler tek parola penceresinde, yalnızca siz seçerseniz silinir.</li>
+      </ul>
+    </div>
+    <div class="shots reveal">
+      <div class="mac"><img src="assets/cleanup-manager.webp" width="2400" height="1480" loading="lazy" alt="Temizlik Yöneticisi: kategoriler, gruplar ve öğe listesi"></div>
+      <div class="mac back"><img src="assets/cleanup-results.webp" width="2400" height="1480" loading="lazy" alt="Tarama sonucu kartları"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Alan Merceği -->
+<section class="module m-violet" id="alan-mercegi">
+  <div class="bgglow" style="--gx:80%;--gx2:10%"></div>
+  <div class="wrap split rev">
+    <div class="shots reveal">
+      <div class="mac"><img src="assets/space-results.webp" width="2400" height="1480" loading="lazy" alt="Alan Merceği: diskin baloncuk haritası ve klasör listesi"></div>
+    </div>
+    <div class="copy reveal">
+      <span class="chip"><i style="background:linear-gradient(135deg,#9c86ff,#5b34d6)">◉</i>Alan Merceği</span>
+      <h2>Diskinizi<br><strong>bir bakışta görün.</strong></h2>
+      <p>Tüm diski, harici sürücüleri ya da tek bir klasörü saniyeler içinde tarar; en çok yer kaplayanları baloncuk haritasında büyüklükleriyle gösterir. Tıklayın, içine girin, seçin, kaldırın.</p>
+      <ul class="checks">
+        <li>Çok iş parçacıklı tarayıcı: aynı klasörü <code>du</code>'dan 2 kat hızlı ölçer*.</li>
+        <li>Sistem klasörleri ve ev klasörünüzün temel klasörleri seçilemez.</li>
+        <li>Seçtikleriniz önce gözden geçirilir, sonra Çöp Kutusu'na taşınır.</li>
+      </ul>
+      <div class="honest reveal">
+        <h4>Dürüst rakamlar</h4>
+        <p>APFS klonları aynı disk bloklarını paylaşır; çoğu araç onları her seferinde yeniden sayar. Ferah, silince gerçekten açılacak alanı ayrıca ölçer.</p>
+        <div class="bar"><span>Görünen</span><div class="track"><i style="--w:100%;background:linear-gradient(90deg,#8f7cff,#d04bff)"></i></div><b>204 GB</b></div>
+        <div class="bar"><span>Gerçek kazanç</span><div class="track"><i style="--w:1.2%;background:#7CFF9B"></i></div><b>43 MB</b></div>
+        <p style="margin:12px 0 0;font-size:12.5px;color:var(--faint)">Örnek: bir tarayıcının geride bıraktığı 100 geçici uygulama kopyası.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Geliştirici Alanı -->
+<section class="module m-blue" id="gelistirici">
+  <div class="bgglow" style="--gx:20%;--gx2:85%"></div>
+  <div class="wrap split">
+    <div class="copy reveal">
+      <span class="chip"><i style="background:linear-gradient(135deg,#6fc7ff,#2a6fd6)">⚒</i>Geliştirici Alanı</span>
+      <h2>Projeleriniz yer kaplamasın,<br><strong>kod kalsın.</strong></h2>
+      <p>Proje klasörlerinizde paket yöneticisiyle geri getirilebilen ara klasörleri bulur; hangi projeye ait olduğunu, ne zamandır dokunulmadığını ve nasıl geri geleceğini söyler.</p>
+      <ul class="checks">
+        <li>Git'te takip edilen klasörlere dokunmaz — repo asla değişmez.</li>
+        <li>Varsayılan olarak yalnızca 30 günden uzun süredir dokunulmamış projeleri seçer.</li>
+        <li>Simülatör çalışma ortamları, Android emülatörleri, eski Node sürümleri ve araç önbellekleri tek ekranda.</li>
+      </ul>
+      <div class="tags">
+        <code>node_modules</code><code>vendor</code><code>.venv</code><code>Pods</code><code>.build</code><code>target</code><code>.next</code><code>build</code><code>.dart_tool</code>
+      </div>
+    </div>
+    <div class="shots reveal">
+      <div class="mac"><img src="assets/dev-results.webp" width="2400" height="1480" loading="lazy" alt="Geliştirici Alanı: projeler ve ara klasörleri"></div>
+      <div class="mac back"><img src="assets/dev-tools.webp" width="2400" height="1480" loading="lazy" alt="Geliştirici Alanı: simülatörler, emülatörler, Node sürümleri"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Disk Bekçisi -->
+<section class="module m-graphite" id="bekci">
+  <div class="bgglow" style="--gx:75%;--gx2:15%"></div>
+  <div class="wrap split rev">
+    <div class="menubar-stage reveal">
+      <div class="notif"><img src="assets/icon-256.png" alt=""><div><b>Disk alanı azaldı</b><span>Başlangıç diskinde yalnızca 19 GB boş alan kaldı. Ferah ile temizlemek için tıklayın.</span></div></div>
+      <div class="mbar">
+        <span>☁</span><span>⌁</span>
+        <span class="me"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="4" width="13" height="8" rx="2"/><circle cx="11.5" cy="8" r=".8" fill="currentColor"/></svg>38 GB</span>
+        <span>17 Eki 13:05</span>
+      </div>
+      <div class="mpanel"><img src="assets/menubar.webp" width="680" height="1066" loading="lazy" alt="Disk bekçisi paneli: boş alan, 7 günlük grafik, büyüyen klasörler, hızlı temizlik"></div>
+    </div>
+    <div class="copy reveal">
+      <span class="chip"><i style="background:linear-gradient(135deg,#8a96d8,#4b568f)">◔</i>Disk Bekçisi</span>
+      <h2>Disk dolmadan<br><strong>haberiniz olsun.</strong></h2>
+      <p>Menü çubuğunda boş alanınızı gösterir; eşiğin altına inince bildirir. Arka planda düşük öncelikle ölçüm yapar ve son 24 saatte neyin büyüdüğünü söyler — "disk neden doldu?" sorusu tarih olur.</p>
+      <ul class="checks">
+        <li>Ayarlanabilir eşik ve bildirim; en fazla 6 saatte bir uyarı.</li>
+        <li>Büyüme gerçek (paylaşılmayan) boyutla ölçülür, klonlar yanıltmaz.</li>
+        <li>Panelden tek tıkla tarama ve önerilen temizlik.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Güvenlik -->
+<section class="safety" id="guvenlik">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="chip" style="--tone:#ffd38a"><i style="background:linear-gradient(135deg,#ffc56b,#e57c2b)">⛨</i>Güvenlik</span>
+      <h2>Önce göster,<br><strong>sonra sil.</strong></h2>
+      <p>Bir temizlik aracının en önemli özelliği neyi silmediğidir. Ferah'ta her silme, tarayıcıdan bağımsız bir güvenlik katmanından geçer.</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#a6ec8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>İzinli alanların dışı yok</h3><p>Silinecek her yol, önceden tanımlı güvenli konumların içinde olmak zorunda. Kökün kendisi asla.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#c9b8ff" stroke-width="1.8" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/><path d="M4 4l16 16"/></svg></div><h3>Bağlantıyla kaçış yok</h3><p>Sembolik bağlar çözülerek kontrol edilir; bir bağ üzerinden Belgeler'e uzanmak imkânsız.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#a9dcff" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M18 11.5c0 4-6 3-10 5.5"/></svg></div><h3>Repo'nuza dokunmaz</h3><p>Git'te takip edilen klasörler listelenmez bile. Git dışındaki vendor klasörleri "tek kopya olabilir" diye önerilmez.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd38a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v5M14 11v5"/></svg></div><h3>Çöp Kutusu seçeneği</h3><p>İsterseniz her şey kalıcı silinmek yerine Çöp Kutusu'na taşınır; fikrinizi değiştirmek için zamanınız olur.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#ff9db0" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><h3>Korumalı alanlara saygı</h3><p>Tam Disk Erişimi verilmediyse diğer uygulamaların verilerine hiç dokunmaz; izin pencereleriyle sizi yormaz.</p></div>
+      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#d7dcff" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><h3>Her şey kayıt altında</h3><p>Etkinliğim ekranı, şimdiye kadar ne kadar alan kazandığınızı ve her temizliği tarihiyle tutar.</p></div>
+    </div>
+
+    <div class="center reveal" style="margin-top:110px">
+      <h2 style="font-size:clamp(28px,3.6vw,40px)">Yerel, hızlı, <strong>sessiz.</strong></h2>
+      <div class="tech">
+        <span>Yerel SwiftUI</span><span>Apple Silicon</span><span>macOS 15 ve üzeri</span><span>İnternet bağlantısı yok</span><span>Analitik yok</span><span>Hesap gerekmez</span><span>Türkçe</span>
+      </div>
+    </div>
+
+    <div class="faq reveal">
+      <details><summary>Silinen dosyalar geri gelir mi?</summary><p>Önbellekler, günlükler ve proje ara klasörleri yeniden üretilebilir veridir; uygulamalar ihtiyaç duyduklarını kendileri oluşturur, <code>npm install</code> gibi komutlar paketleri geri getirir. Emin olmak istediğinizde silme yöntemini "Çöp Kutusu'na taşı" yapabilirsiniz.</p></details>
+      <details><summary>Hangi dosyalara asla dokunmaz?</summary><p>Belgeleriniz, masaüstünüz, sistem dosyaları, Anahtar Zinciri, tercih dosyalarınızın sağlam olanları, iCloud senkron verileri ve git'te takip edilen her şey. Bunlar listelenmez ya da seçilemez.</p></details>
+      <details><summary>Tam Disk Erişimi neden isteniyor?</summary><p>Çöp Kutusu, Mail indirmeleri ve iOS yedekleri gibi macOS'un koruduğu konumları okuyabilmek için. Vermek zorunda değilsiniz; verilmezse Ferah bu konumları atlar ve size söyler.</p></details>
+      <details><summary>Rakamlar neden diğer araçlardan farklı?</summary><p>APFS klonları ve sabit bağlar aynı disk alanını paylaşır. Ferah sabit bağları bir kez sayar ve klonlarda silince gerçekten açılacak alanı ayrıca gösterir. Sonuç bazen daha küçük ama gerçek bir rakamdır.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="glow g1" style="left:10%;top:0"></div><div class="glow g2" style="right:5%;top:120px;background:radial-gradient(circle,#4a1aa8 0%,transparent 65%)"></div>
+  <div class="wrap reveal">
+    <div class="orb"><b>ferah</b></div>
+    <h2>Yakında<br><strong>Mac'inizde.</strong></h2>
+    <p style="color:var(--mute);font-size:18px;max-width:560px;margin:0 auto">Ferah şu anda son dokunuşları alıyor. Gereksiz dosyalardan arınmış, ferah bir Mac için çok az kaldı.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top" style="color:var(--mute)"><svg><use href="#logo"/></svg>ferah</a>
+    <span>* Ölçümler bir Apple Silicon Mac'te yapılmıştır; süreler diskinize göre değişir.</span>
+    <span>© <span id="y">2026</span> Tahir Şen · Türkiye'de tasarlandı</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
+  addEventListener('scroll', onScroll, {passive: true}); onScroll();
+  const items = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window) || location.search.includes('static')) {
+    items.forEach(el => el.classList.add('in'));
+  } else {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
+      {threshold: .08, rootMargin: '0px 0px -40px 0px'});
+    items.forEach(el => io.observe(el));
+  }
+  document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
