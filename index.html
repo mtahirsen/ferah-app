@@ -156,6 +156,16 @@ h2 strong{font-weight:600}
 .card h3{margin:0 0 6px;font-size:18px;font-weight:600}
 .card p{margin:0;font-size:15px;color:var(--mute)}
 
+/* ---------- Kurulum ---------- */
+.steps{list-style:none;padding:0;margin:44px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:s}
+.steps li{position:relative;padding:26px 22px 24px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line)}
+.steps b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;margin-bottom:16px;font-size:15px;
+  background:linear-gradient(180deg,#6cc261,#2f7a33);border:2px solid rgba(255,255,255,.8)}
+.steps h3{margin:0 0 6px;font-size:17px;font-weight:600}
+.steps p{margin:0;font-size:14.5px;color:var(--mute)}
+.steps a{color:#a6ec8f;text-decoration:underline}
+.steps em{font-style:normal;color:rgba(244,246,248,.9)}
+
 /* ---------- Teknik + SSS ---------- */
 .tech{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
 .tech span{padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:14px;color:rgba(244,246,248,.85)}
@@ -170,7 +180,8 @@ details p{margin:0 0 18px;color:var(--mute);font-size:16px;max-width:720px}
 /* ---------- Son çağrı ---------- */
 .final{position:relative;padding:160px 0 120px;text-align:center;overflow:hidden;isolation:isolate}
 .final .glow{opacity:.55}
-.orb{position:relative;width:132px;height:132px;margin:0 auto 40px}
+.orb{position:relative;display:block;width:132px;height:132px;margin:0 auto 40px;transition:transform .25s}
+.orb:hover{transform:scale(1.05)}
 .orb::before{content:"";position:absolute;inset:-34px;border-radius:50%;filter:blur(30px);
   background:conic-gradient(from 0deg,#e8ff6b,#58e07a,#2bd3c6,#7f5cff,#d04bff,#e8ff6b);animation:spin 9s linear infinite;opacity:.8}
 .orb b{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:19px;
@@ -191,6 +202,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
   .split.rev .copy{order:0}
   .stats{grid-template-columns:repeat(2,1fr)}
   .cards{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
   .float-card{right:-8px;bottom:-30px;width:38%}
   .menubar-stage{padding-top:0}
   .notif{position:relative;right:auto;top:auto;margin:0 0 16px;width:100%}
@@ -201,6 +213,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
   .wrap{padding:0 16px}
   .hero{padding-top:110px}
   .cards{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr 1fr}
   .stat b{font-size:24px}
   .mpanel{width:100%;margin:8px 0 0}
@@ -232,8 +245,9 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
       <li><a href="#gelistirici">Geliştirici Alanı</a></li>
       <li><a href="#bekci">Disk Bekçisi</a></li>
       <li><a href="#guvenlik">Güvenlik</a></li>
+      <li><a href="#kurulum">Kurulum</a></li>
     </ul>
-    <span class="pill"><span class="dot"></span>Yakında</span>
+    <a class="pill accent" href="https://github.com/mtahirsen/ferah-site/releases/latest/download/Ferah.dmg">İndir</a>
   </div>
 </nav>
 
@@ -244,10 +258,10 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
     <h1 class="reveal">Mac'iniz<br><em>ferahlasın.</em></h1>
     <p class="lead reveal">Gereksiz dosyaları bulur, diskinizi baloncuk haritasıyla gösterir, geliştiricilerin biriktirdiklerini ortaya çıkarır. Silmeden önce her şeyi size gösterir — ve rakamları şişirmez.</p>
     <div class="cta reveal">
-      <span class="pill accent">macOS 15+ · Yakında</span>
+      <a class="pill accent" href="https://github.com/mtahirsen/ferah-site/releases/latest/download/Ferah.dmg"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg>Ferah'ı İndir</a>
       <a class="pill" href="#temizlik">Neler yapıyor? ↓</a>
     </div>
-    <p class="meta reveal">Apple Silicon için yerel SwiftUI · İnternet bağlantısı yok · Veri toplamaz</p>
+    <p class="meta reveal">Sürüm 1.0 · 3,8 MB · macOS 15+ · Apple Silicon ve Intel · Ücretsiz · <a href="#kurulum" style="text-decoration:underline">Kurulum</a></p>
 
     <div class="stage reveal" id="stage">
       <div class="mac main"><img src="assets/cleanup-intro.webp" width="2400" height="1480" alt="Ferah Çöp Temizliği giriş ekranı: yeşil cam disk, kategoriler ve Tara düğmesi"></div>
@@ -381,6 +395,17 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
       <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#d7dcff" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><h3>Her şey kayıt altında</h3><p>Etkinliğim ekranı, şimdiye kadar ne kadar alan kazandığınızı ve her temizliği tarihiyle tutar.</p></div>
     </div>
 
+    <div class="center reveal" id="kurulum" style="margin-top:120px;scroll-margin-top:90px">
+      <span class="chip" style="--tone:#a6ec8f"><i style="background:linear-gradient(135deg,#86de74,#2c8a3c)">⤓</i>Kurulum</span>
+      <h2>Bir dakikada<br><strong>hazır.</strong></h2>
+    </div>
+    <ol class="steps">
+      <li class="reveal"><b>1</b><h3>İndirin</h3><p><a href="https://github.com/mtahirsen/ferah-site/releases/latest/download/Ferah.dmg">Ferah.dmg</a> dosyasını indirip açın, Ferah'ı <em>Uygulamalar</em> klasörüne sürükleyin.</p></li>
+      <li class="reveal"><b>2</b><h3>İlk açılışa izin verin</h3><p>Ferah henüz Apple tarafından notarize edilmedi. İlk açılışta uyarı çıkarsa <em>Sistem Ayarları › Gizlilik ve Güvenlik</em>'te <em>Yine de Aç</em>'a tıklayın. Bunu bir kez yapmanız yeterli.</p></li>
+      <li class="reveal"><b>3</b><h3>İsterseniz tam erişim</h3><p>Çöp Kutusu, Mail indirmeleri ve iOS yedekleri de taransın diyorsanız <em>Tam Disk Erişimi</em> verin. Vermezseniz Ferah bu konumları atlar.</p></li>
+      <li class="reveal"><b>4</b><h3>Tara'ya basın</h3><p>Ferah önce ne bulduğunu ve neden güvenli olduğunu gösterir; hiçbir şey siz onaylamadan silinmez.</p></li>
+    </ol>
+
     <div class="center reveal" style="margin-top:110px">
       <h2 style="font-size:clamp(28px,3.6vw,40px)">Yerel, hızlı, <strong>sessiz.</strong></h2>
       <div class="tech">
@@ -392,6 +417,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
       <details><summary>Silinen dosyalar geri gelir mi?</summary><p>Önbellekler, günlükler ve proje ara klasörleri yeniden üretilebilir veridir; uygulamalar ihtiyaç duyduklarını kendileri oluşturur, <code>npm install</code> gibi komutlar paketleri geri getirir. Emin olmak istediğinizde silme yöntemini "Çöp Kutusu'na taşı" yapabilirsiniz.</p></details>
       <details><summary>Hangi dosyalara asla dokunmaz?</summary><p>Belgeleriniz, masaüstünüz, sistem dosyaları, Anahtar Zinciri, tercih dosyalarınızın sağlam olanları, iCloud senkron verileri ve git'te takip edilen her şey. Bunlar listelenmez ya da seçilemez.</p></details>
       <details><summary>Tam Disk Erişimi neden isteniyor?</summary><p>Çöp Kutusu, Mail indirmeleri ve iOS yedekleri gibi macOS'un koruduğu konumları okuyabilmek için. Vermek zorunda değilsiniz; verilmezse Ferah bu konumları atlar ve size söyler.</p></details>
+      <details><summary>Neden "geliştirici doğrulanamadı" uyarısı çıkıyor?</summary><p>Ferah bağımsız geliştirilen ücretsiz bir uygulama ve henüz Apple'ın ücretli notarizasyon sürecinden geçmedi. Uygulama internete bağlanmaz ve veri toplamaz; uyarıyı bir kez <em>Sistem Ayarları › Gizlilik ve Güvenlik › Yine de Aç</em> ile geçmeniz yeterli.</p></details>
       <details><summary>Rakamlar neden diğer araçlardan farklı?</summary><p>APFS klonları ve sabit bağlar aynı disk alanını paylaşır. Ferah sabit bağları bir kez sayar ve klonlarda silince gerçekten açılacak alanı ayrıca gösterir. Sonuç bazen daha küçük ama gerçek bir rakamdır.</p></details>
     </div>
   </div>
@@ -400,9 +426,10 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
 <section class="final">
   <div class="glow g1" style="left:10%;top:0"></div><div class="glow g2" style="right:5%;top:120px;background:radial-gradient(circle,#4a1aa8 0%,transparent 65%)"></div>
   <div class="wrap reveal">
-    <div class="orb"><b>ferah</b></div>
-    <h2>Yakında<br><strong>Mac'inizde.</strong></h2>
-    <p style="color:var(--mute);font-size:18px;max-width:560px;margin:0 auto">Ferah şu anda son dokunuşları alıyor. Gereksiz dosyalardan arınmış, ferah bir Mac için çok az kaldı.</p>
+    <a class="orb" href="https://github.com/mtahirsen/ferah-site/releases/latest/download/Ferah.dmg" aria-label="Ferah'ı indir"><b>İndir</b></a>
+    <h2>Mac'iniz<br><strong>ferahlasın.</strong></h2>
+    <p style="color:var(--mute);font-size:18px;max-width:560px;margin:0 auto">Ücretsiz. Sürüm 1.0 · 3,8 MB · macOS 15 ve üzeri, Apple Silicon ve Intel.</p>
+    <p style="margin-top:14px;font-size:13.5px;color:var(--faint)"><a href="https://github.com/mtahirsen/ferah-site/releases" style="text-decoration:underline">Tüm sürümler ve SHA-256 özeti</a></p>
   </div>
 </section>
 
